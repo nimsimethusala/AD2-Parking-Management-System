@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AD2-Final-Project.iml" filepath="$PROJECT_DIR$/AD2-Final-Project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Eureka-Server/Eureka-Server.iml" filepath="$PROJECT_DIR$/Eureka-Server/Eureka-Server.iml" />
     </modules>
   </component>
 </project>
