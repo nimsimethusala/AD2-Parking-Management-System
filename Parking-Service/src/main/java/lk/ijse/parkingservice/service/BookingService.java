@@ -1,5 +1,9 @@
 package lk.ijse.parkingservice.service;
 
-public interface BookingService {
+import lk.ijse.parkingservice.entity.Booking;
 
+import java.util.UUID;
+
+public interface BookingService {
+    Booking reserve(UUID userId, UUID vehicleId, UUID spotId);
 }

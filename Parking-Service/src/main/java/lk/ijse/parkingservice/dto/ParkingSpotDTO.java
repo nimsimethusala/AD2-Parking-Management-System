@@ -5,19 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class BookingDTO {
+public class ParkingSpotDTO {
     private UUID id;
-    private UUID userId;
-    private UUID vehicleId;
-    private UUID parkingSpotId;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private boolean active;
+    private String location;
+    private boolean isAvailable = true;
+    private Long ownerId;
 }

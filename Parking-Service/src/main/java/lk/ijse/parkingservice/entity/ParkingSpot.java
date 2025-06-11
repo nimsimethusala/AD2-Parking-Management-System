@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -17,14 +16,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Booking {
+public class ParkingSpot {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private UUID userId;
-    private UUID vehicleId;
-    private UUID parkingSpotId;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
-    private boolean active;
+    private String location;
+    private boolean isAvailable;
+    private Long ownerId;
+
+    public void setIsAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
+    }
 }
