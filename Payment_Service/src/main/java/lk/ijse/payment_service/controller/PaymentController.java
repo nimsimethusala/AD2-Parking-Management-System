@@ -1,5 +1,6 @@
 package lk.ijse.payment_service.controller;
 
+import lk.ijse.payment_service.dto.PaymentDTO;
 import lk.ijse.payment_service.dto.PaymentRequestDTO;
 import lk.ijse.payment_service.entity.Payment;
 import lk.ijse.payment_service.service.PaymentService;
@@ -17,13 +18,13 @@ public class PaymentController {
 
     @PostMapping("/pay")
     @PreAuthorize("hasAnyRole('USER','OWNER')")
-    public Payment makePayment(@RequestBody PaymentRequestDTO request) {
+    public PaymentDTO makePayment(@RequestBody PaymentRequestDTO request) {
         return paymentService.processPayment(request);
     }
 
     @GetMapping("/booking/{bookingId}")
     @PreAuthorize("isAuthenticated()")
-    public Payment getPaymentByBooking(@PathVariable String bookingId) {
+    public PaymentDTO getPaymentByBooking(@PathVariable String bookingId) {
         return paymentService.getByBookingId(UUID.fromString(bookingId));
     }
 }
