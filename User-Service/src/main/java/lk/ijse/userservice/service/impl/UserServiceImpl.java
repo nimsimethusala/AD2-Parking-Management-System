@@ -15,8 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -56,5 +55,41 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             userRepository.save(modelMapper.map(userDTO, User.class));
             return VarList.Created;
         }
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOList = new ArrayList<>();
+
+        for (User user : users) {
+            UserDTO dto = modelMapper.map(user, UserDTO.class);
+            userDTOList.add(dto);
+        }
+
+        return userDTOList;
+    }
+
+    @Override
+    public UserDTO updateUser(UUID id, UserDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Update fields
+        user.setUsername(dto.getUsername());
+        user.setEmail(dto.getEmail());
+        user.setRole(dto.getRole());
+
+        // Save updated entity
+        User updatedUser = userRepository.save(user);
+
+        // Convert updated entity to DTO
+        UserDTO updatedDTO = modelMapper.map(updatedUser, UserDTO.class);
+        return updatedDTO;
+    }
+
+    @Override
+    public void deleteUser(UUID id) {
+        userRepository.deleteById(id);
     }
 }
