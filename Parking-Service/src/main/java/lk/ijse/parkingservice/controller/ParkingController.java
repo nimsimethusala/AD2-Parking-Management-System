@@ -7,6 +7,7 @@ import lk.ijse.parkingservice.entity.ParkingSpot;
 import lk.ijse.parkingservice.service.BookingService;
 import lk.ijse.parkingservice.service.ParkingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,29 +24,34 @@ public class ParkingController {
 
     // List available spots
     @GetMapping("/spots")
+    @PreAuthorize("isAuthenticated()")
     public List<ParkingSpot> getAvailableSpots() {
         return parkingService.getAvailableSpots();
     }
 
     @PostMapping("/spots")
+    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ParkingSpot addSpot(@Valid @RequestBody ParkingSpotDTO dto) {
         return parkingService.addSpot(dto);
     }
 
-    // Update spot status (manually or via IoT simulation)
     @PutMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ParkingSpot updateSpotStatus(@PathVariable String id, @RequestParam boolean available) {
         return parkingService.updateSpotStatus(UUID.fromString(id), available);
     }
 
     @DeleteMapping("/spots/{id}")
+    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public String deleteSpot(@PathVariable String id) {
         return parkingService.deleteSpot(UUID.fromString(id));
     }
 
-    // Reserve a spot
     @PostMapping("/reserve")
-    public Booking reserveSpot(@RequestParam String userId, @RequestParam String vehicleId, @RequestParam String spotId) {
+    @PreAuthorize("hasAnyRole('USER','OWNER')")
+    public Booking reserveSpot(@RequestParam String userId,
+                               @RequestParam String vehicleId,
+                               @RequestParam String spotId) {
         UUID newUserId = UUID.fromString(userId);
         UUID newVehicleId = UUID.fromString(vehicleId);
         UUID newSpotId = UUID.fromString(spotId);
