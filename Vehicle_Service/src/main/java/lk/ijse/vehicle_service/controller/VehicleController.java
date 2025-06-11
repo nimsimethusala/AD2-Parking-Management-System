@@ -1,5 +1,6 @@
 package lk.ijse.vehicle_service.controller;
 
+import lk.ijse.vehicle_service.dto.VehicleDTO;
 import lk.ijse.vehicle_service.entity.Vehicle;
 import lk.ijse.vehicle_service.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +18,13 @@ public class VehicleController {
 
     @PostMapping("/save")
     @PreAuthorize("hasAnyRole('USER','OWNER')")
-    public Vehicle addVehicle(@RequestBody Vehicle vehicle) {
+    public VehicleDTO addVehicle(@RequestBody Vehicle vehicle) {
         return vehicleService.addVehicle(vehicle);
     }
 
     @GetMapping("/user/{userId}")
     @PreAuthorize("isAuthenticated()")
-    public List<Vehicle> getVehiclesByUserId(@PathVariable String userId) {
+    public List<VehicleDTO> getVehiclesByUserId(@PathVariable String userId) {
         return vehicleService.getVehiclesByUserId(UUID.fromString(userId));
     }
 
@@ -41,9 +42,8 @@ public class VehicleController {
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAnyRole('USER','OWNER')")
-    public Vehicle updateVehicle(@PathVariable String id, @RequestBody Vehicle updatedVehicle) {
-        Vehicle vehicle = vehicleService.updateVehicle(UUID.fromString(id), updatedVehicle);
-        return vehicle;
+    public VehicleDTO updateVehicle(@PathVariable String id, @RequestBody Vehicle updatedVehicle) {
+        return vehicleService.updateVehicle(UUID.fromString(id), updatedVehicle);
     }
 
     @DeleteMapping("/delete/{id}")
