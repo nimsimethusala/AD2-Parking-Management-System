@@ -22,7 +22,7 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private ParkingSpotRepository parkingSpotRepository;
 
-    public Booking reserve(UUID userId, UUID vehicleId, UUID spotId) {
+    public BookingDTO reserve(UUID userId, UUID vehicleId, UUID spotId) {
         ParkingSpot spot = parkingSpotRepository.findById(spotId)
                 .orElseThrow(() -> new RuntimeException("Spot not found"));
 
@@ -41,6 +41,20 @@ public class BookingServiceImpl implements BookingService {
         booking.setParkingSpotId(spotId);
         booking.setStartTime(LocalDateTime.now());
         booking.setEndTime(null); // Not ended yet
-        return bookingRepository.save(booking);
+        booking.setActive(true);
+
+        Booking saved = bookingRepository.save(booking);
+
+        // Manually map to DTO
+        BookingDTO dto = new BookingDTO();
+        dto.setId(saved.getId());
+        dto.setUserId(saved.getUserId());
+        dto.setVehicleId(saved.getVehicleId());
+        dto.setParkingSpotId(saved.getParkingSpotId());
+        dto.setStartTime(saved.getStartTime());
+        dto.setEndTime(saved.getEndTime());
+        dto.setActive(saved.isActive());
+
+        return dto;
     }
 }

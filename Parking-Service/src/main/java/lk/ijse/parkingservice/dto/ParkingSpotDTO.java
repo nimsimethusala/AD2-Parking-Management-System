@@ -16,4 +16,8 @@ public class ParkingSpotDTO {
     private String location;
     private boolean isAvailable = true;
     private Long ownerId;
+
+    public void setIsAvailable(boolean available) {
+        this.isAvailable = available;
+    }
 }

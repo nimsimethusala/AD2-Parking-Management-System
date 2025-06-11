@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,25 +18,53 @@ public class ParkingServiceImpl implements ParkingService {
     @Autowired
     private ParkingSpotRepository parkingSpotRepository;
 
-    public List<ParkingSpot> getAvailableSpots() {
-        return parkingSpotRepository.findByIsAvailableTrue();
+    public List<ParkingSpotDTO> getAvailableSpots() {
+        List<ParkingSpot> spots = parkingSpotRepository.findByIsAvailableTrue();
+        List<ParkingSpotDTO> dtoList = new ArrayList<>();
+
+        for (ParkingSpot spot : spots) {
+            ParkingSpotDTO dto = new ParkingSpotDTO();
+            dto.setId(spot.getId());
+            dto.setLocation(spot.getLocation());
+            dto.setIsAvailable(spot.isAvailable());
+            dto.setOwnerId(spot.getOwnerId());
+            dtoList.add(dto);
+        }
+
+        return dtoList;
     }
 
-    public ParkingSpot addSpot(ParkingSpotDTO dto) {
+    public ParkingSpotDTO addSpot(ParkingSpotDTO dto) {
         ParkingSpot spot = new ParkingSpot();
         spot.setLocation(dto.getLocation());
-        spot.setIsAvailable(true); // new spots are available by default
+        spot.setIsAvailable(true);
         spot.setOwnerId(dto.getOwnerId());
 
-        return parkingSpotRepository.save(spot);
+        ParkingSpot savedSpot = parkingSpotRepository.save(spot);
+
+        ParkingSpotDTO result = new ParkingSpotDTO();
+        result.setId(savedSpot.getId());
+        result.setLocation(savedSpot.getLocation());
+        result.setIsAvailable(savedSpot.isAvailable());
+        result.setOwnerId(savedSpot.getOwnerId());
+
+        return result;
     }
 
-
-    public ParkingSpot updateSpotStatus(UUID id, boolean isAvailable) {
+    public ParkingSpotDTO updateSpotStatus(UUID id, boolean isAvailable) {
         ParkingSpot spot = parkingSpotRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Parking spot not found"));
+
         spot.setIsAvailable(isAvailable);
-        return parkingSpotRepository.save(spot);
+        ParkingSpot updatedSpot = parkingSpotRepository.save(spot);
+
+        ParkingSpotDTO dto = new ParkingSpotDTO();
+        dto.setId(updatedSpot.getId());
+        dto.setLocation(updatedSpot.getLocation());
+        dto.setIsAvailable(updatedSpot.isAvailable());
+        dto.setOwnerId(updatedSpot.getOwnerId());
+
+        return dto;
     }
 
     public String deleteSpot(UUID id) {

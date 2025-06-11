@@ -1,6 +1,7 @@
 package lk.ijse.parkingservice.controller;
 
 import jakarta.validation.Valid;
+import lk.ijse.parkingservice.dto.BookingDTO;
 import lk.ijse.parkingservice.dto.ParkingSpotDTO;
 import lk.ijse.parkingservice.entity.Booking;
 import lk.ijse.parkingservice.entity.ParkingSpot;
@@ -23,25 +24,25 @@ public class ParkingController {
     private BookingService bookingService;
 
     // List available spots
-    @GetMapping("/spots")
+    @GetMapping("/all/spots")
     @PreAuthorize("isAuthenticated()")
-    public List<ParkingSpot> getAvailableSpots() {
+    public List<ParkingSpotDTO> getAvailableSpots() {
         return parkingService.getAvailableSpots();
     }
 
-    @PostMapping("/spots")
+    @PostMapping("/save/spots")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
-    public ParkingSpot addSpot(@Valid @RequestBody ParkingSpotDTO dto) {
+    public ParkingSpotDTO addSpot(@Valid @RequestBody ParkingSpotDTO dto) {
         return parkingService.addSpot(dto);
     }
 
-    @PutMapping("/{id}/status")
+    @PutMapping("/update/{id}/status")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
-    public ParkingSpot updateSpotStatus(@PathVariable String id, @RequestParam boolean available) {
+    public ParkingSpotDTO updateSpotStatus(@PathVariable String id, @RequestParam boolean available) {
         return parkingService.updateSpotStatus(UUID.fromString(id), available);
     }
 
-    @DeleteMapping("/spots/{id}")
+    @DeleteMapping("/delete/spots/{id}")
     @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public String deleteSpot(@PathVariable String id) {
         return parkingService.deleteSpot(UUID.fromString(id));
@@ -49,9 +50,9 @@ public class ParkingController {
 
     @PostMapping("/reserve")
     @PreAuthorize("hasAnyRole('USER','OWNER')")
-    public Booking reserveSpot(@RequestParam String userId,
-                               @RequestParam String vehicleId,
-                               @RequestParam String spotId) {
+    public BookingDTO reserveSpot(@RequestParam String userId,
+                                  @RequestParam String vehicleId,
+                                  @RequestParam String spotId) {
         UUID newUserId = UUID.fromString(userId);
         UUID newVehicleId = UUID.fromString(vehicleId);
         UUID newSpotId = UUID.fromString(spotId);
