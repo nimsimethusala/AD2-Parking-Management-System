@@ -11,25 +11,16 @@
         <module name="Config-Server" />
         <module name="API-Gateway" />
       </profile>
-      <profile name="Annotation profile for Payment_Service" enabled="true">
+      <profile name="Annotation profile for Parking-Service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="Payment_Service" />
-      </profile>
-      <profile name="Annotation profile for Vehicle_Service" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
-        </processorPath>
-        <module name="Vehicle_Service" />
         <module name="Parking-Service" />
+        <module name="Vehicle_Service" />
+        <module name="Payment_Service" />
         <module name="User-Service" />
       </profile>
     </annotationProcessing>

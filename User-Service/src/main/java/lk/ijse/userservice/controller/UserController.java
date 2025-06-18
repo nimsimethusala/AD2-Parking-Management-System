@@ -7,7 +7,6 @@ import lk.ijse.userservice.dto.UserDTO;
 import lk.ijse.userservice.service.UserService;
 import lk.ijse.userservice.util.JwtUtil;
 import lk.ijse.userservice.util.VarList;
-import org.checkerframework.common.value.qual.EnsuresMinLenIf;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,35 +18,33 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/v1/user")
 public class UserController {
+
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    //constructor injection
     public UserController(UserService userService, JwtUtil jwtUtil) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping(value = "/register")
+    @PostMapping("/register")
     public ResponseEntity<ResponseDTO> registerUser(@RequestBody UserDTO userDTO) {
         try {
             int res = userService.saveUser(userDTO);
             switch (res) {
                 case VarList.Created -> {
                     String token = jwtUtil.generateToken(userDTO);
-                    AuthDTO authDTO = new AuthDTO();
-                    authDTO.setEmail(userDTO.getEmail());
-                    authDTO.setToken(token);
+                    AuthDTO authDTO = new AuthDTO(userDTO.getEmail(), token);
                     return ResponseEntity.status(HttpStatus.CREATED)
-                            .body(new ResponseDTO(VarList.Created, "Success", authDTO));
+                            .body(new ResponseDTO(VarList.Created, "User registered successfully", authDTO));
                 }
                 case VarList.Not_Acceptable -> {
                     return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                            .body(new ResponseDTO(VarList.Not_Acceptable, "Email Already Used", null));
+                            .body(new ResponseDTO(VarList.Not_Acceptable, "Email already used", null));
                 }
                 default -> {
-                    return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
-                            .body(new ResponseDTO(VarList.Bad_Gateway, "Error", null));
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(new ResponseDTO(VarList.Bad_Gateway, "Error occurred", null));
                 }
             }
         } catch (Exception e) {
@@ -58,27 +55,30 @@ public class UserController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<ResponseDTO> getAllUsers() {
+        List<UserDTO> allUsers = userService.getAllUsers();
+        return ResponseEntity.ok(new ResponseDTO(VarList.OK, "User list fetched", allUsers));
     }
 
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','OWNER')")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @RequestBody UserDTO dto) {
-        return ResponseEntity.ok(userService.updateUser(UUID.fromString(id), dto));
+    public ResponseEntity<ResponseDTO> updateUser(@PathVariable String id, @RequestBody UserDTO dto) {
+        UserDTO updatedUser = userService.updateUser(UUID.fromString(id), dto);
+        return ResponseEntity.ok(new ResponseDTO(VarList.OK, "User updated successfully", updatedUser));
     }
 
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+    public ResponseEntity<ResponseDTO> deleteUser(@PathVariable String id) {
         userService.deleteUser(UUID.fromString(id));
-        return ResponseEntity.ok("User deleted");
+        return ResponseEntity.ok(new ResponseDTO(VarList.OK, "User deleted successfully", null));
     }
 
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDTO> getOwnProfile(HttpServletRequest request) {
+    public ResponseEntity<ResponseDTO> getOwnProfile(HttpServletRequest request) {
         String email = (String) request.getAttribute("email");
-        return ResponseEntity.ok(userService.loadUserDetailsByUsername(email));
+        UserDTO user = userService.loadUserDetailsByUsername(email);
+        return ResponseEntity.ok(new ResponseDTO(VarList.OK, "Current user profile", user));
     }
 }
