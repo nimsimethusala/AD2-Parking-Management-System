@@ -5,15 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class VehicleDTO {
-    private Long id;
+    private UUID id;
     private String licensePlate;
     private String brand;
     private String model;
-    private Long userId;
+    private UUID userId;
     private boolean isParked = false;
 }

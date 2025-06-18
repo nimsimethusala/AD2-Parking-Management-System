@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,10 +19,10 @@ import lombok.Setter;
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private Long id;
+    private UUID id;
     private String licensePlate;
     private String brand;
     private String model;
-    private Long userId;
+    private UUID userId;
     private boolean isParked = false;
 }
