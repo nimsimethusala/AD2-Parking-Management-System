@@ -4,4 +4,4 @@ Resources
 [Postman Collection](./AD2-Parking-Marking-Management-Database.postman_collection.json)
 
 Eureka Dashboard Screenshot
-[Postman Collection](./docs/screenshot/Eureka_Dashboard.png)
+[Postman Collection](./docs/screenshots/Eureka_Dashboard.png)
