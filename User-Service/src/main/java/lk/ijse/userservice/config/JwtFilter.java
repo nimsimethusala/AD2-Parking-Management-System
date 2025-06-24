@@ -1,5 +1,5 @@
+/*
 package lk.ijse.userservice.config;
-
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -68,5 +68,4 @@ public class JwtFilter extends OncePerRequestFilter {
     private Claims getClaimsFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(secretKey.getBytes()).parseClaimsJws(token).getBody();
     }
-
-}
+}*/

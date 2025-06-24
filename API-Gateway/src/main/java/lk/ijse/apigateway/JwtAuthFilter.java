@@ -1,3 +1,4 @@
+/*
 package lk.ijse.apigateway;
 
 import io.jsonwebtoken.Claims;
@@ -25,10 +26,9 @@ public class JwtAuthFilter implements GatewayFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        String path = request.getURI().getPath();
 
-        // Public routes
-        if (request.getURI().getPath().contains("/api/v1/user/register") ||
-                request.getURI().getPath().contains("/api/v1/authenticate")) {
+        if (path.startsWith("/api/v1/user/register") || path.startsWith("/api/v1/auth/authenticate")) {
             return chain.filter(exchange);
         }
 
@@ -42,11 +42,12 @@ public class JwtAuthFilter implements GatewayFilter {
         try {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             String role = claims.get("role", String.class);
+            String email = claims.getSubject();
 
-            // Forward user role and email to downstream services (optional)
-            ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
+            // Forward user role and email to downstream services
+            ServerHttpRequest mutatedRequest = request.mutate()
                     .header("X-User-Role", role)
-                    .header("X-User-Email", claims.getSubject())
+                    .header("X-User-Email", email)
                     .build();
 
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
@@ -65,3 +66,4 @@ public class JwtAuthFilter implements GatewayFilter {
         return response.writeWith(Mono.just(buffer));
     }
 }
+*/

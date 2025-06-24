@@ -1,3 +1,4 @@
+/*
 package lk.ijse.userservice.controller;
 
 import lk.ijse.userservice.dto.AuthDTO;
@@ -52,4 +53,4 @@ public class AuthController {
                     .body(new ResponseDTO(VarList.Unauthorized, "Invalid credentials", e.getMessage()));
         }
     }
-}
+}*/

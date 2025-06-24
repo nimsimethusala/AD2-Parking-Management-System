@@ -1,3 +1,4 @@
+/*
 package lk.ijse.apigateway;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ public class GatewayConfig {
 
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+        System.out.println("Custom RouteLocator");
         return builder.routes()
                 .route("user-service", r -> r.path("/api/v1/user/**", "/api/v1/authenticate")
                         .filters(f -> f.filter(jwtAuthFilter))
@@ -34,3 +36,4 @@ public class GatewayConfig {
                 .build();
     }
 }
+*/

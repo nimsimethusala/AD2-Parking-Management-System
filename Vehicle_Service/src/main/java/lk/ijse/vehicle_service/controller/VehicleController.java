@@ -17,8 +17,9 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @PostMapping("/save")
-    @PreAuthorize("hasAnyRole('USER','OWNER')")
+//    @PreAuthorize("hasAnyRole('USER','OWNER')")
     public VehicleDTO addVehicle(@RequestBody Vehicle vehicle) {
+        System.out.println("Add vehicle");
         return vehicleService.addVehicle(vehicle);
     }
 
@@ -29,25 +30,25 @@ public class VehicleController {
     }
 
     @PostMapping("/entry")
-    @PreAuthorize("hasAnyRole('USER','OWNER')")
+//    @PreAuthorize("hasAnyRole('USER','OWNER')")
     public String simulateEntry(@RequestParam String vehicleId) {
         return vehicleService.simulateEntry(UUID.fromString(vehicleId));
     }
 
     @PostMapping("/exit")
-    @PreAuthorize("hasAnyRole('USER','OWNER')")
+//    @PreAuthorize("hasAnyRole('USER','OWNER')")
     public String simulateExit(@RequestParam String vehicleId) {
         return vehicleService.simulateExit(UUID.fromString(vehicleId));
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAnyRole('USER','OWNER')")
+//    @PreAuthorize("hasAnyRole('USER','OWNER')")
     public VehicleDTO updateVehicle(@PathVariable String id, @RequestBody Vehicle updatedVehicle) {
         return vehicleService.updateVehicle(UUID.fromString(id), updatedVehicle);
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyRole('USER','OWNER','ADMIN')")
+//    @PreAuthorize("hasAnyRole('USER','OWNER','ADMIN')")
     public String deleteVehicle(@PathVariable String id) {
         return vehicleService.deleteVehicle(UUID.fromString(id));
     }

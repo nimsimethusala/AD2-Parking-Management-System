@@ -25,31 +25,31 @@ public class ParkingController {
 
     // List available spots
     @GetMapping("/all/spots")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public List<ParkingSpotDTO> getAvailableSpots() {
         return parkingService.getAvailableSpots();
     }
 
     @PostMapping("/save/spots")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+//    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ParkingSpotDTO addSpot(@Valid @RequestBody ParkingSpotDTO dto) {
         return parkingService.addSpot(dto);
     }
 
     @PutMapping("/update/{id}/status")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+//    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public ParkingSpotDTO updateSpotStatus(@PathVariable String id, @RequestParam boolean available) {
         return parkingService.updateSpotStatus(UUID.fromString(id), available);
     }
 
     @DeleteMapping("/delete/spots/{id}")
-    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
+//    @PreAuthorize("hasAnyRole('OWNER','ADMIN')")
     public String deleteSpot(@PathVariable String id) {
         return parkingService.deleteSpot(UUID.fromString(id));
     }
 
     @PostMapping("/reserve")
-    @PreAuthorize("hasAnyRole('USER','OWNER')")
+//    @PreAuthorize("hasAnyRole('USER','OWNER')")
     public BookingDTO reserveSpot(@RequestParam String userId,
                                   @RequestParam String vehicleId,
                                   @RequestParam String spotId) {

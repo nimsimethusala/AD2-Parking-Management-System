@@ -17,13 +17,13 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/pay")
-    @PreAuthorize("hasAnyRole('USER','OWNER')")
+//    @PreAuthorize("hasAnyRole('USER','OWNER')")
     public PaymentDTO makePayment(@RequestBody PaymentRequestDTO request) {
         return paymentService.processPayment(request);
     }
 
     @GetMapping("/booking/{bookingId}")
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public PaymentDTO getPaymentByBooking(@PathVariable String bookingId) {
         return paymentService.getByBookingId(UUID.fromString(bookingId));
     }

@@ -4,20 +4,13 @@ import lk.ijse.userservice.dto.UserDTO;
 import lk.ijse.userservice.entity.User;
 import lk.ijse.userservice.repo.UserRepository;
 import lk.ijse.userservice.service.UserService;
-import lk.ijse.userservice.util.VarList;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@Service
+/*@Service
 @Transactional
 public class UserServiceImpl implements UserDetailsService, UserService {
 
@@ -86,6 +79,59 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         // Convert updated entity to DTO
         UserDTO updatedDTO = modelMapper.map(updatedUser, UserDTO.class);
         return updatedDTO;
+    }
+
+    @Override
+    public void deleteUser(UUID id) {
+        userRepository.deleteById(id);
+    }
+}*/
+
+@Service
+public class UserServiceImpl implements UserService {
+
+    private final UserRepository userRepository;
+    private final ModelMapper mapper;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, ModelMapper mapper) {
+        this.userRepository = userRepository;
+        this.mapper = mapper;
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void saveUser(UserDTO dto) {
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+        dto.setPassword(passwordEncoder.encode(dto.getPassword())); // Encrypt
+        userRepository.save(mapper.map(dto, User.class));
+    }
+
+    @Override
+    public UserDTO loadUserDetailsByUsername(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return mapper.map(user, UserDTO.class);
+    }
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> mapper.map(user, UserDTO.class)).toList();
+    }
+
+    @Override
+    public UserDTO updateUser(UUID id, UserDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setUsername(dto.getUsername());
+        user.setRole(dto.getRole());
+        user.setEmail(dto.getEmail());
+
+        return mapper.map(userRepository.save(user), UserDTO.class);
     }
 
     @Override
